@@ -2,46 +2,44 @@ import React, { useEffect, useRef } from "react";
 
 import Map from '../Map/Map';
 import MapService, { MAPBOX_ACCESS_TOKEN } from '../Map/MapService';
-
+import Overlay from "../Overlay/Overlay";
 import './Layout.css';
 
 export default function Layout() {
 
     const mapService = useRef(null);
 
-    useEffect(() => {
+    // useEffect(() => {
         // initialize only once
-        if (mapService.current) {
-            return;
-        }
-        const mapObj = new MapService();
-        mapObj.initMap();
-        mapService.current = mapObj;
-    }, []);
+    //     if (mapService.current) {
+    //         return;
+    //     }
+    //     //mapservice set to hook which is map object
+    //     const mapObj = new MapService();
+    //     mapObj.initMap();
+    //     mapService.current = mapObj;
 
+    //     // mapService.current.addPoints([30,30]);
+    // }, []);
 
-    function getBoundingBox() {
-        const bbox = mapService.current.getdrawnBoundingBox();
-        if (!bbox) {
-            return;
-        }
-        console.log('Drawn bbox:', bbox)
-        alert('Drawn bbox coordinatessssssssssssssssssssssss: ' + JSON.stringify(bbox.geometry.coordinates));
-    }
+    // //function defination of the bounded box drawn by user
+    // function getBoundingBox() {
+    //     const bbox = mapService.current.getdrawnBoundingBox();
+    //     if (!bbox) {
+    //         return;
+    //     }
+    //     console.log('Drawn bbox:', bbox)
+    //     alert('Drawn bbox coordinatessssssssssssssssssssssss: ' + JSON.stringify(bbox.geometry.coordinates));
+    // }
 
     return (
         <div className='layout'>
+            <Overlay />
             <div className='layout__content_cont'>
                 <div>
                     <p>Instructions:</p>
+
                     <ol>
-                        <li>
-                            IMPORTANT: Mapbox requires access token to show map, without token this project won't work.
-                            First create an account on <a target='_blank' rel="noreferrer" href='https://account.mapbox.com/auth/signup/'>Mapbox </a>
-                            then follow the instruction mentioned <a href='https://docs.mapbox.com/help/glossary/access-token/'>here</a> to
-                            get the public acess token. Put you public access token in "MapService.js" file. Reload page once done.
-                        </li>
-                        <li>Use this space for you UI componets</li>
                         <li>Use tool on the top right corner of the map to draw or delete bounding box</li>
                         <li>
                             Check "Map" component to understand how to use the helper class and methods. Provided
@@ -65,16 +63,16 @@ export default function Layout() {
 
                 <div>
                     <p>Draw a bounding box on map then click - &nbsp;</p>
-                    <button onClick={getBoundingBox}>
+                    {/* <button onClick={getBoundingBox}>
                         Get bounding box coordinate
-                    </button>
+                    </button> */}
                     <p>Note: Check console for full object</p>
                 </div>
 
             </div>
 
             <div className='layout__map_cont'>
-                {MAPBOX_ACCESS_TOKEN && <Map />}
+                {/* {MAPBOX_ACCESS_TOKEN && <Map />} */}
             </div>
 
         </div>

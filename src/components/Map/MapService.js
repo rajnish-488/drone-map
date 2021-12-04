@@ -1,7 +1,10 @@
+import { Component, useEffect } from 'react';
+
 import mapboxgl, { Map } from 'mapbox-gl';
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 
 import MarkerImage from '../../assets/images/marker.png';
+import data from './../../assets/data/active_directory_drones.json';
 
 // NOTE: Add you mapbox token here
 export const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoic2luLXNpbmF0cmEiLCJhIjoiY2t3cDI2MjdrMDhrNzJ2cDNkMW95b2E0cSJ9.sRbQfiDOUET9TL5HLNR0GQ'
@@ -10,14 +13,18 @@ export const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1Ijoic2luLXNpbmF0cmEiLCJhIjoiY2t3cDI2M
  * Singleton class holding map instance and does
  * all map related operations
  */
-export default class MapService {
 
-    constructor() {
+
+export default class MapService extends Component {
+
+    constructor(props) {
+        super(props);
         mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
         if (!Map.INSTANCE) {
             Map.INSTANCE = this;
         }
+        // console.log(data[0].location)
         return Map.INSTANCE;
     }
 
@@ -33,8 +40,16 @@ export default class MapService {
     /**
      * Private method, to initilize map
      */
-    initMap() {
 
+
+
+    componentDidMount() {
+        console.log('done')
+        console.log(data[0])
+    }
+
+    
+    initMap() {
         if (this.map || !MAPBOX_ACCESS_TOKEN) {
             return;
         }
@@ -69,6 +84,17 @@ export default class MapService {
         })
 
         this.initDrawTool();
+
+        this.map.on('load',()=>{
+            console.log('sty;le event loaded');
+            const coordinates = [];
+            for (let i = 0; i < 10; i++) {
+                coordinates.push([data[i].location.latitude,data[i].location.longitude])
+                console.log(data[i].location)
+            }
+            coordinates.push([0,0])
+            this.addPoints(coordinates);
+        })
     }
 
     /**
@@ -190,5 +216,9 @@ export default class MapService {
      */
     getdrawnBoundingBox() {
         return this.drawnBoundingBox;
+    }
+
+    getMapObj(){
+        return this.map;
     }
 }
