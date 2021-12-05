@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import Map from '../Map/Map';
 import MapService, { MAPBOX_ACCESS_TOKEN } from '../Map/MapService';
@@ -9,36 +9,45 @@ export default function Layout() {
 
     const mapService = useRef(null);
 
-    // useEffect(() => {
-        // initialize only once
-    //     if (mapService.current) {
-    //         return;
-    //     }
-    //     //mapservice set to hook which is map object
-    //     const mapObj = new MapService();
-    //     mapObj.initMap();
-    //     mapService.current = mapObj;
+    let [ invisibility, setInvisibility ] = useState('');
 
-    //     // mapService.current.addPoints([30,30]);
-    // }, []);
+    let overlayMonitor = e => {
+        // console.log(e);
+        if(!invisibility){
+            setInvisibility('Hide')
+        }else
+            setInvisibility('');
+    };
+
+    useEffect(() => {
+        //initialize only once
+        if (mapService.current) {
+            return;
+        }
+        //mapservice set to hook which is map object
+        const mapObj = new MapService();
+        mapObj.initMap();
+        mapService.current = mapObj;
+        console.log('has been rendered');
+    }, []);
 
     // //function defination of the bounded box drawn by user
-    // function getBoundingBox() {
-    //     const bbox = mapService.current.getdrawnBoundingBox();
-    //     if (!bbox) {
-    //         return;
-    //     }
-    //     console.log('Drawn bbox:', bbox)
-    //     alert('Drawn bbox coordinatessssssssssssssssssssssss: ' + JSON.stringify(bbox.geometry.coordinates));
-    // }
+    function getBoundingBox() {
+        const bbox = mapService.current.getdrawnBoundingBox();
+        if (!bbox) {
+            return;
+        }
+        console.log('Drawn bbox:', bbox)
+        alert('Drawn bbox coordinatessssssssssssssssssssssss: ' + JSON.stringify(bbox.geometry.coordinates));
+    }
 
     return (
         <div className='layout'>
-            <Overlay />
+            <Overlay invisibility={invisibility} setInvisibility={overlayMonitor} />
             <div className='layout__content_cont'>
                 <div>
                     <p>Instructions:</p>
-
+                    <button onClick={(e)=>overlayMonitor(e)}>Upload</button>
                     <ol>
                         <li>Use tool on the top right corner of the map to draw or delete bounding box</li>
                         <li>
@@ -63,18 +72,18 @@ export default function Layout() {
 
                 <div>
                     <p>Draw a bounding box on map then click - &nbsp;</p>
-                    {/* <button onClick={getBoundingBox}>
+                    <button onClick={getBoundingBox}>
                         Get bounding box coordinate
-                    </button> */}
+                    </button>
                     <p>Note: Check console for full object</p>
                 </div>
 
             </div>
 
             <div className='layout__map_cont'>
-                {/* {MAPBOX_ACCESS_TOKEN && <Map />} */}
+                {MAPBOX_ACCESS_TOKEN && <Map />}
             </div>
 
         </div>
     );
-}
+};
